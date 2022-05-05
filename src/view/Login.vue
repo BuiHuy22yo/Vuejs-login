@@ -67,6 +67,14 @@ export default {
       rules
     }
   },
+  watch: {
+    'userForm.password' () {
+      this.textError = ''
+    },
+    'userForm.account' () {
+      this.textError = ''
+    }
+  },
   methods: {
     handleLogin () {
       this.$refs.userForm.validate(valid => {
@@ -76,23 +84,22 @@ export default {
         // console.log({ ...this.userForm })
         // this.login('111111', '111111')
         this.$store
-          .dispatch(`auth/${LOGIN}`, {...this.userForm}).then(() => {
-            console.log('aaaa')
+          .dispatch(`auth/${LOGIN}`, {...this.userForm})
+          .then(() => {
+            this.$refs.userForm.resetFields()
+            // console.log(res)
+            // localStorage.setItem('token',)
+            setTimeout(() => {
+              this.$router.push('/')
+            })
           })
-          // .then(() => {
-          //   console.log('11222')
-          //   // this.$refs.userForm.resetFields()
-          //   // setTimeout(() => {
-          //   //   this.$router.push('/')
-          //   // })
-          // })
-          // .catch((error) => {
-          //   // this.textError = error?.response?.data?.message || '失敗した'
-          //   console.log(error)
-          // })
-          // .finally(() => {
-          //   this.loading = false
-          // })
+          .catch((error) => {
+            this.textError = 'error'
+            console.log(error)
+          })
+          .finally(() => {
+            this.loading = false
+          })
       })
     }
   }
